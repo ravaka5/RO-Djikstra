@@ -1,5 +1,6 @@
 import ReactFlow, { addEdge, Controls, Background, useNodesState, useEdgesState, updateEdge } from 'reactflow';
 import { Button, Table } from "antd";
+import {StepBackwardOutlined , StepForwardOutlined} from "@ant-design/icons";
 import 'reactflow/dist/style.css';
 import { useState, useCallback, useRef } from 'react';
 
@@ -199,7 +200,6 @@ const highlightNodesAndEdges = async (currentNode, distances, pq, nodes, edges, 
     return nodes.map(node => ({
       node: node.data.label,
       distance: distances[node.id] === Infinity ? '∞' : distances[node.id],
-      status: ''
     }));
   };
   
@@ -308,6 +308,7 @@ const highlightNodesAndEdges = async (currentNode, distances, pq, nodes, edges, 
           console.log(prev);
         });
         steps.push(generateTableStep(nodes, distances)); // Ajouter une nouvelle étape
+        console.log(generateTableStep(nodes,distances))
       }
     }
   
@@ -487,6 +488,18 @@ const columns = [
   },
 ];
 
+const [isShort,setIsShort] = useState(true);
+
+const handleShortestPathClick = () => {
+    setIsShort(true); // Met à jour isShort à true lorsque le bouton "chemin le plus court" est cliqué
+  };
+
+  const handleLongestPathClick = () => {
+    setIsShort(false); // Met à jour isShort à false lorsque le bouton "chemin le plus long" est cliqué
+  };
+
+
+
 return (
   <div style={{ height: '100%' }}>
     <ReactFlow
@@ -513,15 +526,23 @@ return (
       </Controls>
     </ReactFlow>
 
-    <div style={{ margin: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <Button disabled={currentStep === 0} onClick={() => setCurrentStep(currentStep - 1)}>
-        Étape précédente
+    <div style={{marginTop:"10px"}}>
+        <Button style={{ marginRight:"10px"}} onClick={handleShortestPathClick}>chemin le plus court</Button>
+        <Button onClick={handleLongestPathClick}>chemin le plus long</Button>
+    </div>
+
+<div>{
+    isShort ? (
+        <div>
+        <div style={{ margin: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+     <Button disabled={currentStep === 0} onClick={() => setCurrentStep(currentStep - 1)}>
+     <StepBackwardOutlined />
       </Button>
       <Button type='primary' onClick={handleShortestPath}>
         Chemin minimal
       </Button>
       <Button disabled={currentStep === processingSteps.length - 1} onClick={() => setCurrentStep(currentStep + 1)}>
-        Étape suivante
+      <StepForwardOutlined />
       </Button>
       <Button style={{ marginLeft: "20px" }} onClick={resetGraphStyles}>
         Réinitialiser les traitements
@@ -536,6 +557,37 @@ return (
       style={{ margin: "20px", width: "600px" }}
     />
     </div>
+    </div>
+
+    ) : (
+        <div>
+        <div style={{ margin: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <Button disabled={currentStep === 0} onClick={() => setCurrentStep(currentStep - 1)}>
+      <StepBackwardOutlined />      </Button>
+      <Button type='default' onClick={handleShortestPath}>
+        Chemin maximal
+      </Button>
+      <Button  disabled={currentStep === processingSteps.length - 1} onClick={() => setCurrentStep(currentStep + 1)}>
+      <StepForwardOutlined />
+      </Button>
+      <Button style={{ marginLeft: "20px" }} onClick={resetGraphStyles} type="primary">
+        Réinitialiser les traitements
+      </Button>
+    </div>
+    <div style={{ margin: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <Table
+      dataSource={processingSteps[currentStep]}
+      columns={columns}
+      pagination={false}
+      rowKey="node"
+      style={{ margin: "20px", width: "600px" }}
+    />
+    </div>
+</div>
+    )
+    }</div>
+    
+    
 
     
   </div>
