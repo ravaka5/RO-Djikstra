@@ -5,10 +5,162 @@ import { useState, useCallback, useRef } from 'react';
 
 const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)); // ['A', 'B', 'C', ..., 'Z']
 
-const initialNodes = [];
+const initialNodes = [
+    {
+      id:"1",
+      data:{
+        label:"A",
+      },
+      position:{
+        x:-300,
+        y:0
+      },
+      sourcePosition:"right",
+      targetPosition: "left",
+      style: { color: 'black', borderRadius: '200px', padding: '10px', width: "35px" },
+    },
+    {
+      id:"2",
+      data:{
+        label:"B",
+      },
+      position:{
+        x:-200,
+        y:-40
+      },
+      sourcePosition:"right",
+      targetPosition: "left",
+      style: { color: 'black', borderRadius: '200px', padding: '10px', width: "35px" },
+    },
+    {
+      id:"3",
+      data:{
+        label:"C",
+      },
+      position:{
+        x:-80,
+        y:-40
+      },
+      sourcePosition:"right",
+      targetPosition: "left",
+      style: { color: 'black', borderRadius: '200px', padding: '10px', width: "35px" },
+    },
+    {
+      id:"4",
+      data:{
+        label:"D",
+      },
+      position:{
+        x:-200,
+        y:40
+      },
+      sourcePosition:"right",
+      targetPosition: "left",
+      style: { color: 'black', borderRadius: '200px', padding: '10px', width: "35px" },
+    },
+    {
+      id:"5",
+      data:{
+        label:"E",
+      },
+      position:{
+        x:-60,
+        y:40
+      },
+      sourcePosition:"right",
+      targetPosition: "left",
+      style: { color: 'black', borderRadius: '200px', padding: '10px', width: "35px" },
+    },
+    {
+      id:"6",
+      data:{
+        label:"F",
+      },
+      position:{
+        x:0,
+        y:0
+      },
+      sourcePosition:"right",
+      targetPosition: "left",
+      style: { color: 'black', borderRadius: '200px', padding: '10px', width: "35px" },
+    },
+  
+  ];
 
-const initialEdges = [
-];
+  const initialEdges = [
+    {
+      id:"1",
+      source:"1",
+      target:"2",
+      label:"7",
+      weight:7
+  
+    },
+    {
+      id:"2",
+      source:"1",
+      target:"4",
+      label:"15",
+      weight:15
+  
+    },
+    {
+      id:"3",
+      source:"2",
+      target:"3",
+      label:"12",
+      weight:12
+  
+    },
+    {
+      id:"4",
+      source:"2",
+      target:"6",
+      label:"16",
+      weight:16
+  
+    },
+    {
+      id:"5",
+      source:"2",
+      target:"5",
+      label:"4",
+      weight:4
+  
+    },
+    {
+      id:"6",
+      source:"3",
+      target:"6",
+      label:"3",
+      weight:3
+  
+    },
+    {
+      id:"7",
+      source:"4",
+      target:"3",
+      label:"5",
+      weight:5
+  
+    },
+    {
+      id:"8",
+      source:"4",
+      target:"5",
+      label:"2",
+      weight:2
+  
+    },
+    {
+      id:"9",
+      source:"5",
+      target:"6",
+      label:"14",
+      weight:14
+  
+    },
+  ];
 
 const highlightNodesAndEdges = async (currentNode, distances, pq, nodes, edges, setNodes, setEdges) => {
     const updatedNodes = nodes.map((node) => {
@@ -153,6 +305,7 @@ const highlightNodesAndEdges = async (currentNode, distances, pq, nodes, edges, 
             prev[neighborNode] = currentNode;
             pq.push({ id: neighborNode, distance: alt });
           }
+          console.log(prev);
         });
         steps.push(generateTableStep(nodes, distances)); // Ajouter une nouvelle étape
       }
@@ -319,6 +472,8 @@ const highlightNodesAndEdges = async (currentNode, distances, pq, nodes, edges, 
   setEdges(updatedEdges);
 };
 
+
+
 const columns = [
   {
     title: 'Node',
@@ -329,11 +484,6 @@ const columns = [
     title: 'Distance',
     dataIndex: 'distance',
     key: 'distance',
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    key: 'status',
   },
 ];
 
@@ -377,14 +527,17 @@ return (
         Réinitialiser les traitements
       </Button>
     </div>
-
+    <div style={{ margin: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}>
     <Table
       dataSource={processingSteps[currentStep]}
       columns={columns}
       pagination={false}
       rowKey="node"
-      style={{ margin: "20px", width: "400px" }}
+      style={{ margin: "20px", width: "600px" }}
     />
+    </div>
+
+    
   </div>
 );
 }
